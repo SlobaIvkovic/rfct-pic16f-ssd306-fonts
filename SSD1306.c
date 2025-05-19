@@ -196,12 +196,12 @@ int checkAgain(char* index, int* current)
     }
     while(index[*current] < 0xD0)   // 
     {                               // 
-        for(i = 0; i < 5; i++)      // 
+    /*    for(i = 0; i < 5; i++)      // 
         {
             I2C_WriteByte(0);
-        }
+        }*/
         (*current)++;
-        
+      
     }
     (*current)++;
     return 0;
