@@ -24,20 +24,27 @@
 #include "SSD1306.h"
 #include <stdint.h>
 
+//#include "font_metro.h"
+#include "font_coolvetica.h"
+
 
 void main(void) {
     
     __delay_ms(500);
+    
+    const char* chosenFont = font; 
+    
     SSD1306_Init(0);
     SSD1306_clear();
     
  //   SSD1306_drawText(1, 1, "Н");
     
-    SSD1306_drawText(1, 1, "СРЕЋНА");
+    SSD1306_drawText(1, 1, "СРЕЋАН", chosenFont);
     
-    SSD1306_drawText(1, 3, "НОВА");
-    SSD1306_drawText(1, 5, "ГОДИНА");
+    SSD1306_drawText(1, 3, "ТИ ШЕРПИ", chosenFont);
+    SSD1306_drawText(1, 5, "РОЂЕНДАН", chosenFont);
 
+    
     
 // Arabic chars testing    
 /*
