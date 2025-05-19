@@ -16,4 +16,7 @@ void SSD1306_clear();
 void SSD1306_drawText(uint8_t x, uint8_t y, char* text);
 void setXY(uint8_t x, uint8_t y);
 
+void writeArabicChar(int width, int numInFont);
+void SSD1306_drawArabicText(uint8_t x, uint8_t y, char* text);
+
 #endif
