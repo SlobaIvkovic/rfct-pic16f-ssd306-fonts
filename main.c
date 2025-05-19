@@ -47,7 +47,7 @@ void main(void) {
     toPrint[5] = 0x00;
 //    SSD1306_drawArabicText(0,3, toPrint);
 //SSD1306_drawArabicText(1,3, "مرحبا بالعالم");
-    SSD1306_drawArabicText(1,3, "مرحبًا");
+
 //    writeArabicChar(0x08, 0xA7);
 
     TURN_DISPLAY_ON();
