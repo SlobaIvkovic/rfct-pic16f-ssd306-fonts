@@ -33,11 +33,14 @@ void main(void) {
     
  //   SSD1306_drawText(1, 1, "Н");
     
-//    SSD1306_drawText(1, 1, "СРЕЋНА");
+    SSD1306_drawText(1, 1, "СРЕЋНА");
     
-//    SSD1306_drawText(1, 3, "НОВА");
-//    SSD1306_drawText(1, 5, "ГОДИНА");
+    SSD1306_drawText(1, 3, "НОВА");
+    SSD1306_drawText(1, 5, "ГОДИНА");
 
+    
+// Arabic chars testing    
+/*
     char toPrint[6];
     toPrint[0] = 0xD8;
     toPrint[1] = 0xA8;
@@ -46,10 +49,11 @@ void main(void) {
     toPrint[4] = 0x00;
     toPrint[5] = 0x00;
 //    SSD1306_drawArabicText(0,3, toPrint);
-//SSD1306_drawArabicText(1,3, "مرحبا بالعالم");
+
 
 //    writeArabicChar(0x08, 0xA7);
 
+*/
     TURN_DISPLAY_ON();
     
     

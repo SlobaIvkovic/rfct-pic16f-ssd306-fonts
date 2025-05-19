@@ -240,9 +240,9 @@ int checkAgain(char* index, int* current)
     {
         return -1;
     }
-    while(index[*current] < 0xD0)   // bilo D0 za Srpski D8 za arapski
-    {     
-        for(i = 0; i < 5; i++)
+    while(index[*current] < 0xD0)   // Ovo je za spejs, ima i boljih rešenja, ali ako je manje od D0
+    {                               // što je prvi bajt ćiriličnih karaktera (drugi bajt je prava vrednost) 
+        for(i = 0; i < 5; i++)      // onda smatramo da je u pitanju spejs i štampamo pet praznih stupaca
         {
             I2C_WriteByte(0);
         }
@@ -252,6 +252,9 @@ int checkAgain(char* index, int* current)
     (*current)++;
     return 0;
 }
+
+// Napraviti funkciju koja štampa mali znak pitanja kada ne zna koji je to karakter
+// Napraviti funkciju koja štampa interpunkcijske znakove (proveravanje prvog bajta odlučuje koji se font niz bira)
 
 void SSD1306_drawText(uint8_t x, uint8_t y, char* text)
 {
@@ -280,8 +283,8 @@ void SSD1306_drawText(uint8_t x, uint8_t y, char* text)
             break;
         }
         
-        ind = (text[current] - 0xA1) * 47;  // puta 47 za srpski bilo 0x82 za srpski 80 arapski pre
-        for(i = 0; i < 46; i++)      //font[ind]  // bilo 46
+        ind = (text[current] - 0x82) * 47;  // puta 47 za srpski bilo 0x82 za srpski
+        for(i = 0; i < 46; i++)      //
         {
             if(i == font[ind]) // širina dostignuta na font[ind] se nalazi informacija o širini, preći na sledeću liniju
             {
