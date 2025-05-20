@@ -329,59 +329,46 @@ void SSD1306_printText(uint8_t x, uint8_t y, char* text, const unsigned char* fo
         if(text[current] == 0xD0)
         {
             ind = (text[current+1] - 0x82) * 47;  // puta 47 za srpski bilo 0x82 za srpski
-        //    for(i = 0; i < font[ind+1]; i++)//
-                for(i = 0; i < 2; i++)
+            for(i = 0; i < font[ind+1]; i++)//
             {
                 
                 for(j = 0; j < font[ind]; j++)
-                //   for(j = 0; j < 9; j++)
                 {
                    
                     I2C_WriteByte(font[ind + 2 + k]);
                     k++;
                 }
-            //   if(i<(font[ind+1] - 1))
+               if(i<(font[ind+1] - 1))
                 {
-                /*    I2C_Stop();
+                    I2C_Stop();
                 
-                    setXY(xtemp, y+k);
+                    setXY(xtemp, y+i+1);
     
                     I2C_Start();
                     I2C_WriteByte(0x78);
-                    I2C_WriteByte(0x40); */
+                    I2C_WriteByte(0x40);
                 }
             }
-                   
+             xtemp += font[ind]+1;   
+             current+=2;
         }
-    //    else if(!(text[current] >> 7)) // Asci chars are 1 byte long and MSB is 0
-        /*{
+        else if(!(text[current] >> 7)) // Asci chars are 1 byte long and MSB is 0
+        {
             if(text[current] == '\0')  // 
             {
                 break;
             }
             ind = (text[current] - 0x20) * 47;  // basic Chars start with space which is ascii 0x20
-            for(i = 0; i < 46; i++)      //
+            for(i = 0; i < 5; i++)      //
             {
-                if(i == fontBasicChars[ind]) //
-                {
-                I2C_Stop();
-     
-                setXY(xtemp, y+1);
-    
-                I2C_Start();
-                I2C_WriteByte(0x78);
-                I2C_WriteByte(0x40);
-    
-                }
-                I2C_WriteByte(fontBasicChars[ind +1 + i]);  // + 1 when WIDTH // Na svakih 47 počinje novi karakter, svaki karakter počinje svojom dužinom pa onda se nastavlja 
-                                                                // bajtovima za štampanje, 47 je veliki broj, verovatno je prvobitno izabran za velike fontove   
+                I2C_WriteByte(fontBasicChars[ind +1 + i]);
             }
             current++;
             xtemp += font[ind];
-        }*/
+        }
         
         
-        xtemp += font[ind]+1;
+        
     //    xtemp++;
 
         I2C_Stop();
@@ -392,7 +379,7 @@ void SSD1306_printText(uint8_t x, uint8_t y, char* text, const unsigned char* fo
     I2C_WriteByte(0x78);
     I2C_WriteByte(0x40);
     
-    current+=2;
+    
         
         
     }

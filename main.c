@@ -44,8 +44,8 @@ void main(void) {
     
     SSD1306_printText(1, 1, "СРЕЋАН", chosenFont);
     
-//    SSD1306_printText(1, 3, "ТИШЕРПИ", chosenFont);
-//    SSD1306_printText(1, 5, "ОЂДЂ", chosenFont);
+    SSD1306_printText(1, 3, "ТИ ШЕРПИ", chosenFont);
+    SSD1306_printText(1, 5, "РОЂЕНДАН", chosenFont);
 
     
     
