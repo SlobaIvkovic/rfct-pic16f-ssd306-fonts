@@ -330,45 +330,30 @@ void SSD1306_printText(uint8_t x, uint8_t y, char* text, const unsigned char* fo
       
     while(text[current] != 0)
     {
-        j=0;
         k = 0;
- 
-        if(-1 == checkAgain(text, &current))
-        {
-            break;
-        }
-        
-        if(text[current-1] == 0xD0)
+        if(text[current] == 0xD0)
         {
             ind = (text[current] - 0x82) * 47;  // puta 47 za srpski bilo 0x82 za srpski
-            for(i = 0; i < 46; i++)      //
+            for(i = 0; i < font[ind+1]; i++)//
             {
-                if(j == font[ind]) // širina dostignuta na font[ind] se nalazi informacija o širini, preći na sledeću liniju
+                
+                for(j = 0; j < font[ind]; j++)
                 {
-                    
-                    j=0;  // y must revert back to its original value for the next letter, +1 aint enough if text is 3 stupca
-                k++;
-                I2C_Stop();
-                
-                
-                setXY(xtemp, y+k);
-    
-                I2C_Start();
-                I2C_WriteByte(0x78);
-                I2C_WriteByte(0x40);
-    
+                    k++;
+                    I2C_WriteByte(font[ind + 2 + k]);
                 }
-               else
-                j++;
-            I2C_WriteByte(font[ind + 1 + i]);  // + 1 when WIDTH // Na svakih 47 počinje novi karakter, svaki karakter počinje svojom dužinom pa onda se nastavlja 
-                                                                // bajtovima za štampanje, 47 je veliki broj, verovatno je prvobitno izabran za velike fontove   
+                if(i<font[ind+1] - 1)
+                {
+                    I2C_Stop();
+                
+                    setXY(xtemp, y+k);
+    
+                    I2C_Start();
+                    I2C_WriteByte(0x78);
+                    I2C_WriteByte(0x40);
+                }
             }
-        //    if(text[current+1] != '\0')
-        //    {
-        //    current += 1;
-            
-        //    }
-        
+              current+=2;     
         }
     //    else if(!(text[current] >> 7)) // Asci chars are 1 byte long and MSB is 0
         /*{
@@ -408,7 +393,7 @@ void SSD1306_printText(uint8_t x, uint8_t y, char* text, const unsigned char* fo
     I2C_WriteByte(0x78);
     I2C_WriteByte(0x40);
     
-    current+=1;
+    
         
         
     }
