@@ -42,10 +42,10 @@ void main(void) {
     char toPrint[] = "ТИШЕРПИ";
 //    toPrint[6] = '\0';
     
-    SSD1306_drawText(1, 1, "СРЕЋАН", chosenFont);
+    SSD1306_printText(1, 1, "СРЕЋАН", chosenFont);
     
-    SSD1306_drawText(1, 3, "ТИШЕРПИ", chosenFont);
-    SSD1306_drawText(1, 5, "ОЂДЂ", chosenFont);
+//    SSD1306_printText(1, 3, "ТИШЕРПИ", chosenFont);
+//    SSD1306_printText(1, 5, "ОЂДЂ", chosenFont);
 
     
     
