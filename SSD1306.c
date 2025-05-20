@@ -11,6 +11,8 @@
 #include <xc.h>
 #include <stdint.h>
 
+extern const char fontBasicChars[];
+
 void SSD1306_command(uint8_t c, uint8_t address) 
 {   
     I2C_Start();
@@ -194,12 +196,19 @@ int checkAgain(char* index, int* current)
     {
         return -1;
     }
+    
+ /*   if(!(index[*current] >> 7))
+    {
+        return 0;
+    }
+    */
     while(index[*current] < 0xD0)   // 
     {                               // 
     /*    for(i = 0; i < 5; i++)      // 
         {
             I2C_WriteByte(0);
         }*/
+
         (*current)++;
       
     }
@@ -211,6 +220,94 @@ int checkAgain(char* index, int* current)
 // Napraviti funkciju koja štampa interpunkcijske znakove (proveravanje prvog bajta odlučuje koji se font niz bira)
 
 void SSD1306_drawText(uint8_t x, uint8_t y, char* text, const char* font)
+{   
+    uint8_t xtemp = x;
+    unsigned char i, k, j;
+    int ind = 0;
+    int current = 0;
+       
+    setXY(x, y);
+    
+    I2C_Start();
+    I2C_WriteByte(0x78);
+    I2C_WriteByte(0x40);
+    
+    while(text[current] != 0)
+    {
+        j = 0;
+        k = 0;
+        if(-1 == checkAgain(text, &current))
+        {
+            break;
+        }
+        
+        if(text[current-1] == 0xD0)
+        {
+            ind = (text[current] - 0x82) * 47;  // puta 47 za srpski bilo 0x82 za srpski
+            for(i = 0; i < 46; i++)      //
+            {
+               if(i == font[ind]) // širina dostignuta na font[ind] se nalazi informacija o širini, preći na sledeću liniju
+                {
+                   j = 0;
+                   k++;
+                   
+                    I2C_Stop();
+     
+                    setXY(xtemp, y+k);
+    
+                    I2C_Start();
+                    I2C_WriteByte(0x78);
+                    I2C_WriteByte(0x40);
+    
+                }
+                else
+                {
+                    j++;
+                }
+                I2C_WriteByte(font[ind +1 + i]);  // + 1 when WIDTH // Na svakih 47 počinje novi karakter, svaki karakter počinje svojom dužinom pa onda se nastavlja 
+                                                                // bajtovima za štampanje, 47 je veliki broj, verovatno je prvobitno izabran za velike fontove   
+            }
+        }
+       /* else //if(!(text[current-1] >> 7)) // MSB bit the byte 0 indicate single byte char ASCII compatible
+        {
+            ind = (text[current] - 0x20) * 47;  // basic Chars start with space which is ascii 0x20
+            for(i = 0; i < 46; i++)      //
+            {
+                if(i == fontBasicChars[ind]) //
+                {
+                I2C_Stop();
+     
+                setXY(xtemp, y+1);
+    
+                I2C_Start();
+                I2C_WriteByte(0x78);
+                I2C_WriteByte(0x40);
+    
+                }
+            I2C_WriteByte(font[ind +1 + i]);  // + 1 when WIDTH // Na svakih 47 počinje novi karakter, svaki karakter počinje svojom dužinom pa onda se nastavlja 
+                                                                // bajtovima za štampanje, 47 je veliki broj, verovatno je prvobitno izabran za velike fontove   
+                }
+        }*/
+        
+        xtemp += font[ind]+1;
+
+        I2C_Stop();
+        setXY(xtemp, y);    
+        I2C_Start();
+        
+        I2C_WriteByte(0x78);
+        I2C_WriteByte(0x40);
+    
+        current += 1;
+        
+    }
+    
+    I2C_Stop();
+
+}
+
+
+void SSD1306_printText(uint8_t x, uint8_t y, char* text, const unsigned char* font)
 {
     
  //   index = (index - 0xD089) * 8;
@@ -221,42 +318,85 @@ void SSD1306_drawText(uint8_t x, uint8_t y, char* text, const char* font)
     setXY(x, y);
     
     
-    int i;
+    unsigned char i, j, k;
     int ind = 0;
     int current = 0;
     
     I2C_Start();
     I2C_WriteByte(0x78);
     I2C_WriteByte(0x40);
-    
-    while(text[current] != 0)
+      
+    while(text[current] != '\0')
     {
-    
-        if(-1 == checkAgain(text, &current))
+    /*    if(-1 == checkAgain(text, &current))
         {
             break;
         }
-        
-        ind = (text[current] - 0x82) * 47;  // puta 47 za srpski bilo 0x82 za srpski
-        for(i = 0; i < 46; i++)      //
+      */  
+        k = 0;
+        j=0;
+        if(text[current] == 0xD0)
         {
-            if(i == font[ind]) // širina dostignuta na font[ind] se nalazi informacija o širini, preći na sledeću liniju
+            ind = (text[current+1] - 0x82) * 47;  // puta 47 za srpski bilo 0x82 za srpski
+            for(i = 0; i < 46; i++)      //
             {
-               I2C_Stop();
-     
-               setXY(xtemp, y+1);
+                if(j == font[ind]) // širina dostignuta na font[ind] se nalazi informacija o širini, preći na sledeću liniju
+                {
+                    
+                    j=0;  // y must revert back to its original value for the next letter, +1 aint enough if text is 3 stupca
+                k++;
+                I2C_Stop();
+                
+                
+                setXY(xtemp, y+k);
     
                 I2C_Start();
                 I2C_WriteByte(0x78);
                 I2C_WriteByte(0x40);
     
+                }
+               else
+                j++;
+            I2C_WriteByte(font[ind + 1 + i]);  // + 1 when WIDTH // Na svakih 47 počinje novi karakter, svaki karakter počinje svojom dužinom pa onda se nastavlja 
+                                                                // bajtovima za štampanje, 47 je veliki broj, verovatno je prvobitno izabran za velike fontove   
             }
-            I2C_WriteByte(font[ind +1 + i]);  // + 1 when WIDTH // Na svakih 47 počinje novi karakter, svaki karakter počinje svojom dužinom pa onda se nastavlja 
-                                                                // bajtovima za štampanje, 47 je veliki broj, verovatno je prvobitno izabran za velike fontove
+        //    if(text[current+1] != '\0')
+        //    {
+        //    current += 1;
             
+        //    }
+        
         }
-        xtemp += font[ind];
-     //   w += 2;
+    //    else if(!(text[current] >> 7)) // Asci chars are 1 byte long and MSB is 0
+        /*{
+            if(text[current] == '\0')  // 
+            {
+                break;
+            }
+            ind = (text[current] - 0x20) * 47;  // basic Chars start with space which is ascii 0x20
+            for(i = 0; i < 46; i++)      //
+            {
+                if(i == fontBasicChars[ind]) //
+                {
+                I2C_Stop();
+     
+                setXY(xtemp, y+1);
+    
+                I2C_Start();
+                I2C_WriteByte(0x78);
+                I2C_WriteByte(0x40);
+    
+                }
+                I2C_WriteByte(fontBasicChars[ind +1 + i]);  // + 1 when WIDTH // Na svakih 47 počinje novi karakter, svaki karakter počinje svojom dužinom pa onda se nastavlja 
+                                                                // bajtovima za štampanje, 47 je veliki broj, verovatno je prvobitno izabran za velike fontove   
+            }
+            current++;
+            xtemp += font[ind];
+        }*/
+        
+        
+        xtemp += font[ind]+1;
+
         I2C_Stop();
         setXY(xtemp, y);
         
@@ -265,14 +405,16 @@ void SSD1306_drawText(uint8_t x, uint8_t y, char* text, const char* font)
     I2C_WriteByte(0x78);
     I2C_WriteByte(0x40);
     
-    
-        current += 1;
+    current+=2;
+        
         
     }
     
     I2C_Stop();
 
 }
+
+
 
 void SSD1306_drawArabicText(uint8_t x, uint8_t y, char* text)
 {

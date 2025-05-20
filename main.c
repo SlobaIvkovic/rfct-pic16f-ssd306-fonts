@@ -32,17 +32,20 @@ void main(void) {
     
     __delay_ms(500);
     
-    const char* chosenFont = font; 
+    const unsigned char* chosenFont = font; 
     
     SSD1306_Init(0);
     SSD1306_clear();
     
  //   SSD1306_drawText(1, 1, "Н");
     
-    SSD1306_drawText(1, 1, "СРЕЋАН", chosenFont);
+    char toPrint[] = "ТИШЕРПИ";
+//    toPrint[6] = '\0';
     
-    SSD1306_drawText(1, 3, "ТИ ШЕРПИ", chosenFont);
-    SSD1306_drawText(1, 5, "РОЂЕНДАН", chosenFont);
+    SSD1306_printText(1, 5, "СРЕЋАН", chosenFont);
+    
+    SSD1306_drawText(1, 1, toPrint, chosenFont);
+ //   SSD1306_printText(1, 5, "РОЂЕНДАН", chosenFont);
 
     
     
