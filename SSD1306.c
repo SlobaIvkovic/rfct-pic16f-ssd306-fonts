@@ -244,12 +244,12 @@ void SSD1306_drawText(uint8_t x, uint8_t y, char* text, const char* font)
         if(text[current-1] == 0xD0)
         {
             ind = (text[current] - 0x82) * 47;  // puta 47 za srpski bilo 0x82 za srpski
-            for(i = 0; i < 46; i++)      //
+            for(i = 0; i < 27; i++)      //
             {
                 
                if(j == font[ind]) // širina dostignuta na font[ind] se nalazi informacija o širini, preći na sledeću liniju
                 {
-                   j = 0;
+                   j = 1;
                    k++;
                    
                     I2C_Stop();
