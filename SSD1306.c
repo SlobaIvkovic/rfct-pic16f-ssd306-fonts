@@ -263,7 +263,7 @@ void SSD1306_drawText(uint8_t x, uint8_t y, char* text, const char* font)
                 }
                 else
                 {
-                 //   j++;
+                    j++;
                 }
                 I2C_WriteByte(font[ind +1 + i]);  // + 1 when WIDTH // Na svakih 47 počinje novi karakter, svaki karakter počinje svojom dužinom pa onda se nastavlja 
                                                                 // bajtovima za štampanje, 47 je veliki broj, verovatno je prvobitno izabran za velike fontove   
