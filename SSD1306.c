@@ -246,7 +246,22 @@ void SSD1306_drawText(uint8_t x, uint8_t y, char* text, const char* font)
             ind = (text[current] - 0x82) * 47;  // puta 47 za srpski bilo 0x82 za srpski
             for(i = 0; i < 46; i++)      //
             {
-               if(i == font[ind]) // širina dostignuta na font[ind] se nalazi informacija o širini, preći na sledeću liniju
+                for(j=0; j < font[ind]; j++)
+                {
+                    I2C_WriteByte(font[ind +1 + i]);
+                }
+                k++;
+                   
+                I2C_Stop();
+     
+                setXY(xtemp, y+k);
+    
+                    I2C_Start();
+                    I2C_WriteByte(0x78);
+                    I2C_WriteByte(0x40);
+                
+                
+            /*   if(j == font[ind]) // širina dostignuta na font[ind] se nalazi informacija o širini, preći na sledeću liniju
                 {
                    j = 0;
                    k++;
@@ -266,6 +281,7 @@ void SSD1306_drawText(uint8_t x, uint8_t y, char* text, const char* font)
                 }
                 I2C_WriteByte(font[ind +1 + i]);  // + 1 when WIDTH // Na svakih 47 počinje novi karakter, svaki karakter počinje svojom dužinom pa onda se nastavlja 
                                                                 // bajtovima za štampanje, 47 je veliki broj, verovatno je prvobitno izabran za velike fontove   
+             * */
             }
         }
        /* else //if(!(text[current-1] >> 7)) // MSB bit the byte 0 indicate single byte char ASCII compatible
@@ -326,18 +342,19 @@ void SSD1306_printText(uint8_t x, uint8_t y, char* text, const unsigned char* fo
     I2C_WriteByte(0x78);
     I2C_WriteByte(0x40);
       
-    while(text[current] != '\0')
+    while(text[current] != 0)
     {
-    /*    if(-1 == checkAgain(text, &current))
+        j=0;
+        k = 0;
+ 
+        if(-1 == checkAgain(text, &current))
         {
             break;
         }
-      */  
-        k = 0;
-        j=0;
-        if(text[current] == 0xD0)
+        
+        if(text[current-1] == 0xD0)
         {
-            ind = (text[current+1] - 0x82) * 47;  // puta 47 za srpski bilo 0x82 za srpski
+            ind = (text[current] - 0x82) * 47;  // puta 47 za srpski bilo 0x82 za srpski
             for(i = 0; i < 46; i++)      //
             {
                 if(j == font[ind]) // širina dostignuta na font[ind] se nalazi informacija o širini, preći na sledeću liniju
@@ -405,7 +422,7 @@ void SSD1306_printText(uint8_t x, uint8_t y, char* text, const unsigned char* fo
     I2C_WriteByte(0x78);
     I2C_WriteByte(0x40);
     
-    current+=2;
+    current+=1;
         
         
     }
