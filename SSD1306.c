@@ -309,7 +309,7 @@ void SSD1306_drawText(uint8_t x, uint8_t y, char* text, const char* font)
 }
 
 
-void SSD1306_printText(uint8_t x, uint8_t y, char* text, const unsigned char* font)
+void SSD1306_printText(uint8_t x, uint8_t y, char* text, const unsigned char* font, unsigned char offset)
 {   
     uint8_t xtemp = x;
     
@@ -328,7 +328,7 @@ void SSD1306_printText(uint8_t x, uint8_t y, char* text, const unsigned char* fo
         k = 0;
         if(text[current] == 0xD0)
         {
-            ind = (text[current+1] - 0x82) * 47;  // puta 47 za srpski bilo 0x82 za srpski
+            ind = (text[current+1] - 0x82) * offset;  // puta 47 za srpski bilo 0x82 za srpski
             for(i = 0; i < font[ind+1]; i++)//
             {
                 

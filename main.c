@@ -25,14 +25,15 @@
 #include <stdint.h>
 
 //#include "font_metro.h"
-#include "font_coolvetica.h"
+#include "genericfont.h"
 
 
 void main(void) {
     
     __delay_ms(500);
     
-    const unsigned char* chosenFont = font; 
+    const unsigned char* chosenFont = font;
+    unsigned char offset = fontOffset;
     
     SSD1306_Init(0);
     SSD1306_clear();
@@ -42,10 +43,10 @@ void main(void) {
     char toPrint[] = "ТИШЕРПИ";
 //    toPrint[6] = '\0';
     
-    SSD1306_printText(1, 1, "СЛОБО ГЕНИЈЕ", chosenFont);
+    SSD1306_printText(1, 1, "СРЕЋАН", chosenFont, offset);
     
-    SSD1306_printText(1, 3, "СЛОБО МАЈСТОРЕ", chosenFont);
- //   SSD1306_printText(1, 5, "", chosenFont);
+    SSD1306_printText(1, 3, "КАЛИБРИ", chosenFont, offset);
+    SSD1306_printText(1, 5, "РОЂЕНДАН", chosenFont, offset);
 
     
     
